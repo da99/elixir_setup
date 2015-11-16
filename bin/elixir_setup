@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+#
+set -u -e -o pipefail
+THIS_DIR="$(dirname $(dirname $0))"
+TEMPLATES="${THIS_DIR}/templates"
+action=$1
+shift
+
+case $action in
+  help|--help)
+    bash_setup print_help $0
+    ;;
+
+  new_app)
+    app_name="$(bash_setup app_name $@)"
+
+    mkdir -p lib
+    mkdir -p config
+
+    export App_Name="$(bash_setup Model_Name $app_name)"
+    export app_name="$(bash_setup lower      $app_name)"
+    export APP_NAME="$(bash_setup UPPER      $app_name)"
+
+    cat $TEMPLATES/config.exs | bash_setup mush? config/config.exs
+    cat $TEMPLATES/mix.exs    | bash_setup mush? mix.exs
+    ;;
+
+  *)
+    echo "Unknown option: $action" 1>&2
+    exit 1
+    ;;
+
+esac

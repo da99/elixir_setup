@@ -24,6 +24,8 @@ case $action in
 
     cat $TEMPLATES/config.exs | bash_setup mush? config/config.exs
     cat $TEMPLATES/mix.exs    | bash_setup mush? mix.exs
+    cat $TEMPLATES/app.ex     | bash_setup mush? lib/${app_name}.ex
+    mix deps.update --all
     ;;
 
   *)
